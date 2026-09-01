@@ -5,13 +5,16 @@ Firebase Cloud Messaging Service Worker
 =====================================================
 */
 
+
 importScripts(
   "https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"
 );
 
+
 importScripts(
   "https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"
 );
+
 
 
 /*
@@ -46,9 +49,10 @@ firebase.initializeApp({
 });
 
 
+
 /*
 =====================================================
-FIREBASE MESSAGING
+MESSAGING
 =====================================================
 */
 
@@ -64,28 +68,30 @@ BACKGROUND MESSAGE
 */
 
 messaging.onBackgroundMessage(
-  function(payload) {
+  payload => {
 
     console.log(
-      "[firebase-messaging-sw.js] Background message:",
+      "[FCM SW] Background message:",
       payload
     );
 
 
-    const notificationTitle =
+    const title =
       payload.notification?.title ||
+      payload.data?.title ||
       "🚨 Bangladesh Emergency Alert";
 
 
-    const notificationBody =
+    const body =
       payload.notification?.body ||
+      payload.data?.body ||
       "আপনার জেলার জন্য নতুন জরুরি সতর্কতা এসেছে।";
 
 
-    const notificationOptions = {
+    const options = {
 
       body:
-        notificationBody,
+        body,
 
       icon:
         "/bangladesh-emergency-alert/icon.png",
@@ -100,11 +106,8 @@ messaging.onBackgroundMessage(
 
 
     self.registration.showNotification(
-
-      notificationTitle,
-
-      notificationOptions
-
+      title,
+      options
     );
 
   }
@@ -120,26 +123,32 @@ NOTIFICATION CLICK
 
 self.addEventListener(
   "notificationclick",
-  function(event) {
+  event => {
 
     event.notification.close();
 
 
-    const targetUrl =
+    const appUrl =
       "https://honestentities-web.github.io/bangladesh-emergency-alert/";
 
 
     event.waitUntil(
 
       clients.matchAll({
-        type: "window",
-        includeUncontrolled: true
+
+        type:
+          "window",
+
+        includeUncontrolled:
+          true
+
       }).then(
-        function(clientList) {
+        clientList => {
 
           /*
-           If app is already open,
-           focus it.
+          ---------------------------------------------
+          Existing app window
+          ---------------------------------------------
           */
 
           for (
@@ -158,7 +167,9 @@ self.addEventListener(
 
 
           /*
-           Otherwise open the app.
+          ---------------------------------------------
+          Open new window
+          ---------------------------------------------
           */
 
           if (
@@ -166,7 +177,7 @@ self.addEventListener(
           ) {
 
             return clients.openWindow(
-              targetUrl
+              appUrl
             );
 
           }
