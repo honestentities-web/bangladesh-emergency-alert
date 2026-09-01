@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Bangladesh Emergency Alert</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #006a4e, #004d3a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 420px;
+      background: #ffffff;
+      color: #222;
+      border-radius: 20px;
+      padding: 30px 25px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+
+    .flag {
+      font-size: 55px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 5px 0 10px;
+      color: #006a4e;
+      font-size: 25px;
+    }
+
+    p {
+      color: #555;
+      line-height: 1.5;
+    }
+
+    select {
+      width: 100%;
+      padding: 14px;
+      margin-top: 15px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      background: #fff;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: #006a4e;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #006a4e;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00563f;
+    }
+
+    .home {
+      display: none;
+    }
+
+    .district {
+      color: #006a4e;
+      font-weight: bold;
+      font-size: 20px;
+      margin-top: 5px;
+    }
+
+    .change {
+      background: #eeeeee;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .change:hover {
+      background: #dddddd;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- FIRST TIME SETUP -->
+    <div id="setup">
+
+      <div class="flag">🇧🇩</div>
+
+      <h1>Bangladesh Emergency Alert</h1>
+
+      <p>
+        জরুরি সতর্কতা পেতে প্রথমে আপনার জেলা নির্বাচন করুন।
+      </p>
+
+      <select id="district">
+        <option value="">-- আপনার জেলা নির্বাচন করুন --</option>
+      </select>
+
+      <button onclick="saveDistrict()">
+        CONTINUE
+      </button>
+
+    </div>
+
+
+    <!-- HOME -->
+    <div id="home" class="home">
+
+      <div class="flag">🇧🇩</div>
+
+      <h1>Bangladesh Emergency Alert</h1>
+
+      <p>
+        আপনার নির্বাচিত জেলা:
+      </p>
+
+      <div class="district" id="selectedDistrict"></div>
+
+      <p style="margin-top: 25px;">
+        🚨 আপনার জেলার জরুরি সতর্কতাগুলো এখানে দেখানো হবে।
+      </p>
+
+      <button class="change" onclick="changeDistrict()">
+        জেলা পরিবর্তন করুন
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    // বাংলাদেশের ৬৪টি জেলা
+    const districts = [
+
+      // ঢাকা বিভাগ - ১৩
+      "ঢাকা",
+      "ফরিদপুর",
+      "গাজীপুর",
+      "গোপালগঞ্জ",
+      "কিশোরগঞ্জ",
+      "মাদারীপুর",
+      "মানিকগঞ্জ",
+      "মুন্সিগঞ্জ",
+      "নারায়ণগঞ্জ",
+      "নরসিংদী",
+      "রাজবাড়ী",
+      "শরীয়তপুর",
+      "টাঙ্গাইল",
+
+      // খুলনা বিভাগ - ১০
+      "বাগেরহাট",
+      "চুয়াডাঙ্গা",
+      "যশোর",
+      "ঝিনাইদহ",
+      "খুলনা",
+      "কুষ্টিয়া",
+      "মাগুরা",
+      "মেহেরপুর",
+      "নড়াইল",
+      "সাতক্ষীরা",
+
+      // চট্টগ্রাম বিভাগ - ১১
+      "বান্দরবান",
+      "ব্রাহ্মণবাড়িয়া",
+      "চাঁদপুর",
+      "চট্টগ্রাম",
+      "কুমিল্লা",
+      "কক্সবাজার",
+      "ফেনী",
+      "খাগড়াছড়ি",
+      "লক্ষ্মীপুর",
+      "নোয়াখালী",
+      "রাঙ্গামাটি",
+
+      // রাজশাহী বিভাগ - ৮
+      "বগুড়া",
+      "জয়পুরহাট",
+      "নওগাঁ",
+      "নাটোর",
+      "চাঁপাইনবাবগঞ্জ",
+      "পাবনা",
+      "রাজশাহী",
+      "সিরাজগঞ্জ",
+
+      // রংপুর বিভাগ - ৮
+      "দিনাজপুর",
+      "গাইবান্ধা",
+      "কুড়িগ্রাম",
+      "লালমনিরহাট",
+      "নীলফামারী",
+      "পঞ্চগড়",
+      "রংপুর",
+      "ঠাকুরগাঁও",
+
+      // ময়মনসিংহ বিভাগ - ৪
+      "জামালপুর",
+      "ময়মনসিংহ",
+      "নেত্রকোনা",
+      "শেরপুর",
+
+      // বরিশাল বিভাগ - ৬
+      "বরগুনা",
+      "বরিশাল",
+      "ভোলা",
+      "ঝালকাঠি",
+      "পটুয়াখালী",
+      "পিরোজপুর",
+
+      // সিলেট বিভাগ - ৪
+      "হবিগঞ্জ",
+      "মৌলভীবাজার",
+      "সুনামগঞ্জ",
+      "সিলেট"
+
+    ];
+
+
+    // Dropdown-এ ৬৪ জেলা যোগ করা
+    const select = document.getElementById("district");
+
+    districts.forEach(function(district) {
+
+      const option = document.createElement("option");
+
+      option.value = district;
+      option.textContent = district;
+
+      select.appendChild(option);
+
+    });
+
+
+    // জেলা Save
+    function saveDistrict() {
+
+      const district = select.value;
+
+      if (!district) {
+
+        alert("অনুগ্রহ করে আপনার জেলা নির্বাচন করুন।");
+
+        return;
+      }
+
+      // ফোনের browser/app storage-এ জেলা save
+      localStorage.setItem("userDistrict", district);
+
+      showHome(district);
+    }
+
+
+    // Home দেখানো
+    function showHome(district) {
+
+      document.getElementById("setup").style.display = "none";
+
+      document.getElementById("home").style.display = "block";
+
+      document.getElementById("selectedDistrict").textContent = district;
+    }
+
+
+    // জেলা পরিবর্তন
+    function changeDistrict() {
+
+      localStorage.removeItem("userDistrict");
+
+      document.getElementById("home").style.display = "none";
+
+      document.getElementById("setup").style.display = "block";
+
+      select.value = "";
+    }
+
+
+    // Page load হওয়ার সময় আগের জেলা আছে কিনা দেখা
+    window.onload = function() {
+
+      const savedDistrict = localStorage.getItem("userDistrict");
+
+      if (savedDistrict) {
+
+        showHome(savedDistrict);
+
+      }
+
+    };
+
+  </script>
+
+</body>
+</html>
