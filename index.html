@@ -25,11 +25,11 @@
     .container {
       width: 90%;
       max-width: 420px;
-      background: #ffffff;
+      background: #fff;
       color: #222;
       border-radius: 20px;
       padding: 30px 25px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 15px 40px rgba(0,0,0,.25);
       text-align: center;
     }
 
@@ -57,11 +57,6 @@
       border-radius: 10px;
       font-size: 16px;
       background: #fff;
-      outline: none;
-    }
-
-    select:focus {
-      border-color: #006a4e;
     }
 
     button {
@@ -89,233 +84,368 @@
       color: #006a4e;
       font-weight: bold;
       font-size: 20px;
-      margin-top: 5px;
     }
 
     .change {
-      background: #eeeeee;
+      background: #eee;
       color: #333;
       font-size: 14px;
     }
 
-    .change:hover {
-      background: #dddddd;
+    #notificationStatus {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #f1f1f1;
+      color: #333;
+      font-size: 14px;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <!-- FIRST TIME SETUP -->
-    <div id="setup">
+  <!-- FIRST TIME SETUP -->
+  <div id="setup">
 
-      <div class="flag">🇧🇩</div>
+    <div class="flag">🇧🇩</div>
 
-      <h1>Bangladesh Emergency Alert</h1>
+    <h1>Bangladesh Emergency Alert</h1>
 
-      <p>
-        জরুরি সতর্কতা পেতে প্রথমে আপনার জেলা নির্বাচন করুন।
-      </p>
+    <p>
+      জরুরি সতর্কতা পেতে প্রথমে আপনার জেলা নির্বাচন করুন।
+    </p>
 
-      <select id="district">
-        <option value="">-- আপনার জেলা নির্বাচন করুন --</option>
-      </select>
+    <select id="district">
+      <option value="">-- আপনার জেলা নির্বাচন করুন --</option>
+    </select>
 
-      <button onclick="saveDistrict()">
-        CONTINUE
-      </button>
-
-    </div>
-
-
-    <!-- HOME -->
-    <div id="home" class="home">
-
-      <div class="flag">🇧🇩</div>
-
-      <h1>Bangladesh Emergency Alert</h1>
-
-      <p>
-        আপনার নির্বাচিত জেলা:
-      </p>
-
-      <div class="district" id="selectedDistrict"></div>
-
-      <p style="margin-top: 25px;">
-        🚨 আপনার জেলার জরুরি সতর্কতাগুলো এখানে দেখানো হবে।
-      </p>
-
-      <button class="change" onclick="changeDistrict()">
-        জেলা পরিবর্তন করুন
-      </button>
-
-    </div>
+    <button onclick="saveDistrict()">
+      CONTINUE
+    </button>
 
   </div>
 
 
-  <script>
+  <!-- HOME -->
+  <div id="home">
 
-    // বাংলাদেশের ৬৪টি জেলা
-    const districts = [
+    <div class="flag">🇧🇩</div>
 
-      // ঢাকা বিভাগ - ১৩
-      "ঢাকা",
-      "ফরিদপুর",
-      "গাজীপুর",
-      "গোপালগঞ্জ",
-      "কিশোরগঞ্জ",
-      "মাদারীপুর",
-      "মানিকগঞ্জ",
-      "মুন্সিগঞ্জ",
-      "নারায়ণগঞ্জ",
-      "নরসিংদী",
-      "রাজবাড়ী",
-      "শরীয়তপুর",
-      "টাঙ্গাইল",
+    <h1>Bangladesh Emergency Alert</h1>
 
-      // খুলনা বিভাগ - ১০
-      "বাগেরহাট",
-      "চুয়াডাঙ্গা",
-      "যশোর",
-      "ঝিনাইদহ",
-      "খুলনা",
-      "কুষ্টিয়া",
-      "মাগুরা",
-      "মেহেরপুর",
-      "নড়াইল",
-      "সাতক্ষীরা",
+    <p>
+      আপনার নির্বাচিত জেলা:
+    </p>
 
-      // চট্টগ্রাম বিভাগ - ১১
-      "বান্দরবান",
-      "ব্রাহ্মণবাড়িয়া",
-      "চাঁদপুর",
-      "চট্টগ্রাম",
-      "কুমিল্লা",
-      "কক্সবাজার",
-      "ফেনী",
-      "খাগড়াছড়ি",
-      "লক্ষ্মীপুর",
-      "নোয়াখালী",
-      "রাঙ্গামাটি",
+    <div class="district" id="selectedDistrict"></div>
 
-      // রাজশাহী বিভাগ - ৮
-      "বগুড়া",
-      "জয়পুরহাট",
-      "নওগাঁ",
-      "নাটোর",
-      "চাঁপাইনবাবগঞ্জ",
-      "পাবনা",
-      "রাজশাহী",
-      "সিরাজগঞ্জ",
+    <div id="notificationStatus">
+      Notification status checking...
+    </div>
 
-      // রংপুর বিভাগ - ৮
-      "দিনাজপুর",
-      "গাইবান্ধা",
-      "কুড়িগ্রাম",
-      "লালমনিরহাট",
-      "নীলফামারী",
-      "পঞ্চগড়",
-      "রংপুর",
-      "ঠাকুরগাঁও",
+    <button class="change" onclick="changeDistrict()">
+      জেলা পরিবর্তন করুন
+    </button>
 
-      // ময়মনসিংহ বিভাগ - ৪
-      "জামালপুর",
-      "ময়মনসিংহ",
-      "নেত্রকোনা",
-      "শেরপুর",
+  </div>
 
-      // বরিশাল বিভাগ - ৬
-      "বরগুনা",
-      "বরিশাল",
-      "ভোলা",
-      "ঝালকাঠি",
-      "পটুয়াখালী",
-      "পিরোজপুর",
-
-      // সিলেট বিভাগ - ৪
-      "হবিগঞ্জ",
-      "মৌলভীবাজার",
-      "সুনামগঞ্জ",
-      "সিলেট"
-
-    ];
+</div>
 
 
-    // Dropdown-এ ৬৪ জেলা যোগ করা
-    const select = document.getElementById("district");
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 
-    districts.forEach(function(district) {
-
-      const option = document.createElement("option");
-
-      option.value = district;
-      option.textContent = district;
-
-      select.appendChild(option);
-
-    });
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
 
 
-    // জেলা Save
-    function saveDistrict() {
+<script>
 
-      const district = select.value;
+  // Firebase configuration
+  const firebaseConfig = {
 
-      if (!district) {
+    apiKey: "AIzaSyCr95lLjLgbeLHGnaHXV8pO45GwHOU0HIo",
 
-        alert("অনুগ্রহ করে আপনার জেলা নির্বাচন করুন।");
+    authDomain:
+      "bangladesh-emergency-ale-b20aa.firebaseapp.com",
+
+    projectId:
+      "bangladesh-emergency-ale-b20aa",
+
+    storageBucket:
+      "bangladesh-emergency-ale-b20aa.firebasestorage.app",
+
+    messagingSenderId:
+      "409539260860",
+
+    appId:
+      "1:409539260860:web:d4043fe16a1061d9953bb9"
+
+  };
+
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  const messaging = firebase.messaging();
+
+
+  // বাংলাদেশের ৬৪ জেলা
+  const districts = [
+
+    "ঢাকা",
+    "ফরিদপুর",
+    "গাজীপুর",
+    "গোপালগঞ্জ",
+    "কিশোরগঞ্জ",
+    "মাদারীপুর",
+    "মানিকগঞ্জ",
+    "মুন্সিগঞ্জ",
+    "নারায়ণগঞ্জ",
+    "নরসিংদী",
+    "রাজবাড়ী",
+    "শরীয়তপুর",
+    "টাঙ্গাইল",
+
+    "বাগেরহাট",
+    "চুয়াডাঙ্গা",
+    "যশোর",
+    "ঝিনাইদহ",
+    "খুলনা",
+    "কুষ্টিয়া",
+    "মাগুরা",
+    "মেহেরপুর",
+    "নড়াইল",
+    "সাতক্ষীরা",
+
+    "বান্দরবান",
+    "ব্রাহ্মণবাড়িয়া",
+    "চাঁদপুর",
+    "চট্টগ্রাম",
+    "কুমিল্লা",
+    "কক্সবাজার",
+    "ফেনী",
+    "খাগড়াছড়ি",
+    "লক্ষ্মীপুর",
+    "নোয়াখালী",
+    "রাঙ্গামাটি",
+
+    "বগুড়া",
+    "জয়পুরহাট",
+    "নওগাঁ",
+    "নাটোর",
+    "চাঁপাইনবাবগঞ্জ",
+    "পাবনা",
+    "রাজশাহী",
+    "সিরাজগঞ্জ",
+
+    "দিনাজপুর",
+    "গাইবান্ধা",
+    "কুড়িগ্রাম",
+    "লালমনিরহাট",
+    "নীলফামারী",
+    "পঞ্চগড়",
+    "রংপুর",
+    "ঠাকুরগাঁও",
+
+    "জামালপুর",
+    "ময়মনসিংহ",
+    "নেত্রকোনা",
+    "শেরপুর",
+
+    "বরগুনা",
+    "বরিশাল",
+    "ভোলা",
+    "ঝালকাঠি",
+    "পটুয়াখালী",
+    "পিরোজপুর",
+
+    "হবিগঞ্জ",
+    "মৌলভীবাজার",
+    "সুনামগঞ্জ",
+    "সিলেট"
+
+  ];
+
+
+  // District dropdown
+  const select = document.getElementById("district");
+
+  districts.forEach(function(district) {
+
+    const option = document.createElement("option");
+
+    option.value = district;
+
+    option.textContent = district;
+
+    select.appendChild(option);
+
+  });
+
+
+  // Save district
+  async function saveDistrict() {
+
+    const district = select.value;
+
+    if (!district) {
+
+      alert("অনুগ্রহ করে আপনার জেলা নির্বাচন করুন।");
+
+      return;
+
+    }
+
+    localStorage.setItem(
+      "userDistrict",
+      district
+    );
+
+    showHome(district);
+
+    // Notification permission
+    await enableNotifications();
+
+  }
+
+
+  // Show home
+  function showHome(district) {
+
+    document.getElementById("setup").style.display =
+      "none";
+
+    document.getElementById("home").style.display =
+      "block";
+
+    document.getElementById("selectedDistrict").textContent =
+      district;
+
+  }
+
+
+  // Change district
+  function changeDistrict() {
+
+    localStorage.removeItem("userDistrict");
+
+    document.getElementById("home").style.display =
+      "none";
+
+    document.getElementById("setup").style.display =
+      "block";
+
+    select.value = "";
+
+  }
+
+
+  // Enable notification
+  async function enableNotifications() {
+
+    const status =
+      document.getElementById("notificationStatus");
+
+
+    // Browser support check
+    if (!("Notification" in window)) {
+
+      status.textContent =
+        "এই browser notification support করে না।";
+
+      return;
+
+    }
+
+
+    try {
+
+      const permission =
+        await Notification.requestPermission();
+
+
+      if (permission !== "granted") {
+
+        status.textContent =
+          "🔕 Notification permission দেওয়া হয়নি।";
 
         return;
-      }
-
-      // ফোনের browser/app storage-এ জেলা save
-      localStorage.setItem("userDistrict", district);
-
-      showHome(district);
-    }
-
-
-    // Home দেখানো
-    function showHome(district) {
-
-      document.getElementById("setup").style.display = "none";
-
-      document.getElementById("home").style.display = "block";
-
-      document.getElementById("selectedDistrict").textContent = district;
-    }
-
-
-    // জেলা পরিবর্তন
-    function changeDistrict() {
-
-      localStorage.removeItem("userDistrict");
-
-      document.getElementById("home").style.display = "none";
-
-      document.getElementById("setup").style.display = "block";
-
-      select.value = "";
-    }
-
-
-    // Page load হওয়ার সময় আগের জেলা আছে কিনা দেখা
-    window.onload = function() {
-
-      const savedDistrict = localStorage.getItem("userDistrict");
-
-      if (savedDistrict) {
-
-        showHome(savedDistrict);
 
       }
 
-    };
 
-  </script>
+      status.textContent =
+        "🔔 Notification permission দেওয়া হয়েছে। Token তৈরি হচ্ছে...";
+
+
+      // VAPID public key
+      const token = await messaging.getToken({
+
+        vapidKey:
+          "BNfljoumaCPfQGwiLlIk-ofzt4085KxjQNfftw-j7z4pad7a-ZUt7cS_zBdBL51H0LtEL3NpvBVUU8LcmnabW_c"
+
+      });
+
+
+      if (token) {
+
+        console.log(
+          "FCM TOKEN:",
+          token
+        );
+
+        // Temporary local save
+        localStorage.setItem(
+          "fcmToken",
+          token
+        );
+
+        status.textContent =
+          "🔔 Notification প্রস্তুত আছে।";
+
+      } else {
+
+        status.textContent =
+          "FCM token পাওয়া যায়নি।";
+
+      }
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "Notification error:",
+        error
+      );
+
+      status.textContent =
+        "Notification setup করতে সমস্যা হয়েছে।";
+
+    }
+
+  }
+
+
+  // Page load
+  window.onload = function() {
+
+    const savedDistrict =
+      localStorage.getItem("userDistrict");
+
+
+    if (savedDistrict) {
+
+      showHome(savedDistrict);
+
+    }
+
+  };
+
+</script>
 
 </body>
 </html>
