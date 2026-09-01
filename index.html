@@ -1,451 +1,1322 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#006a4e"
+  >
+
+  <meta
+    name="description"
+    content="Bangladesh Emergency Alert - জেলার জরুরি সতর্কতা"
+  >
 
   <title>Bangladesh Emergency Alert</title>
 
+
   <style>
+
     * {
       box-sizing: border-box;
     }
 
+
+    html,
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #006a4e, #004d3a);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
     }
+
+
+    body {
+
+      font-family:
+        Arial,
+        "Noto Sans Bengali",
+        "Noto Sans",
+        sans-serif;
+
+      background:
+        linear-gradient(
+          135deg,
+          #006a4e 0%,
+          #004d3a 100%
+        );
+
+      min-height: 100vh;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      color: #222;
+
+      padding: 20px;
+
+    }
+
 
     .container {
-      width: 90%;
-      max-width: 420px;
-      background: #fff;
-      color: #222;
-      border-radius: 20px;
-      padding: 30px 25px;
-      box-shadow: 0 15px 40px rgba(0,0,0,.25);
+
+      width: 100%;
+
+      max-width: 440px;
+
+      background: #ffffff;
+
+      border-radius: 24px;
+
+      padding: 30px 24px;
+
+      box-shadow:
+        0 20px 50px
+        rgba(0, 0, 0, 0.25);
+
       text-align: center;
+
+      animation:
+        fadeIn 0.4s ease;
+
     }
+
+
+    @keyframes fadeIn {
+
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+    }
+
 
     .flag {
-      font-size: 55px;
-      margin-bottom: 10px;
+
+      font-size: 58px;
+
+      line-height: 1;
+
+      margin-bottom: 14px;
+
     }
+
 
     h1 {
-      margin: 5px 0 10px;
+
+      margin: 0 0 12px;
+
       color: #006a4e;
+
       font-size: 25px;
+
+      font-weight: 700;
+
     }
+
 
     p {
+
       color: #555;
-      line-height: 1.5;
+
+      line-height: 1.6;
+
+      font-size: 15px;
+
+      margin: 8px 0;
+
     }
+
+
+    .subtitle {
+
+      margin-bottom: 20px;
+
+    }
+
 
     select {
+
       width: 100%;
-      padding: 14px;
-      margin-top: 15px;
-      border: 2px solid #ddd;
-      border-radius: 10px;
+
+      padding: 15px;
+
+      border:
+
+        2px solid
+
+        #dddddd;
+
+      border-radius: 12px;
+
+      background: #ffffff;
+
       font-size: 16px;
-      background: #fff;
+
+      color: #222;
+
+      outline: none;
+
+      cursor: pointer;
+
     }
+
+
+    select:focus {
+
+      border-color: #006a4e;
+
+    }
+
 
     button {
+
       width: 100%;
-      margin-top: 18px;
-      padding: 14px;
+
       border: none;
-      border-radius: 10px;
+
+      border-radius: 12px;
+
+      padding: 15px;
+
+      margin-top: 16px;
+
       background: #006a4e;
-      color: white;
+
+      color: #ffffff;
+
       font-size: 17px;
-      font-weight: bold;
+
+      font-weight: 700;
+
       cursor: pointer;
+
+      transition:
+        background 0.2s,
+        transform 0.1s;
+
     }
+
 
     button:hover {
-      background: #00563f;
+
+      background: #00543e;
+
     }
+
+
+    button:active {
+
+      transform: scale(0.98);
+
+    }
+
 
     .home {
+
       display: none;
+
     }
+
+
+    .selected-label {
+
+      color: #666;
+
+      margin-top: 10px;
+
+      margin-bottom: 4px;
+
+    }
+
 
     .district {
+
       color: #006a4e;
-      font-weight: bold;
-      font-size: 20px;
+
+      font-size: 25px;
+
+      font-weight: 700;
+
+      margin-bottom: 20px;
+
     }
+
+
+    .status {
+
+      padding: 13px;
+
+      border-radius: 12px;
+
+      background: #f3f5f4;
+
+      color: #333;
+
+      font-size: 14px;
+
+      line-height: 1.5;
+
+      margin-top: 18px;
+
+      text-align: left;
+
+    }
+
+
+    .status.success {
+
+      background: #e7f7ef;
+
+      color: #12663f;
+
+    }
+
+
+    .status.warning {
+
+      background: #fff6dd;
+
+      color: #765600;
+
+    }
+
+
+    .status.error {
+
+      background: #ffe9e9;
+
+      color: #9b1c1c;
+
+    }
+
 
     .change {
-      background: #eee;
+
+      background: #eeeeee;
+
       color: #333;
+
       font-size: 14px;
+
     }
 
-    #notificationStatus {
-      margin-top: 20px;
-      padding: 12px;
-      border-radius: 10px;
-      background: #f1f1f1;
-      color: #333;
-      font-size: 14px;
+
+    .change:hover {
+
+      background: #dddddd;
+
     }
+
+
+    .alert-box {
+
+      margin-top: 20px;
+
+      padding: 18px;
+
+      border-radius: 14px;
+
+      background: #fff5f5;
+
+      border-left:
+
+        5px solid
+
+        #d90429;
+
+      text-align: left;
+
+    }
+
+
+    .alert-title {
+
+      font-weight: 700;
+
+      color: #b00020;
+
+      margin-bottom: 7px;
+
+    }
+
+
+    .alert-text {
+
+      color: #444;
+
+      line-height: 1.6;
+
+      font-size: 14px;
+
+    }
+
+
+    .small {
+
+      font-size: 12px;
+
+      color: #888;
+
+      margin-top: 20px;
+
+    }
+
+
+    .loading {
+
+      opacity: 0.6;
+
+      pointer-events: none;
+
+    }
+
   </style>
+
 </head>
+
 
 <body>
 
-<div class="container">
 
-  <!-- FIRST TIME SETUP -->
-  <div id="setup">
-
-    <div class="flag">🇧🇩</div>
-
-    <h1>Bangladesh Emergency Alert</h1>
-
-    <p>
-      জরুরি সতর্কতা পেতে প্রথমে আপনার জেলা নির্বাচন করুন।
-    </p>
-
-    <select id="district">
-      <option value="">-- আপনার জেলা নির্বাচন করুন --</option>
-    </select>
-
-    <button onclick="saveDistrict()">
-      CONTINUE
-    </button>
-
-  </div>
+  <div class="container">
 
 
-  <!-- HOME -->
-  <div id="home">
+    <!-- =========================================
+         FIRST TIME DISTRICT SELECTION
+         ========================================= -->
 
-    <div class="flag">🇧🇩</div>
+    <div id="setup">
 
-    <h1>Bangladesh Emergency Alert</h1>
 
-    <p>
-      আপনার নির্বাচিত জেলা:
-    </p>
+      <div class="flag">
+        🇧🇩
+      </div>
 
-    <div class="district" id="selectedDistrict"></div>
 
-    <div id="notificationStatus">
-      Notification status checking...
+      <h1>
+        Bangladesh Emergency Alert
+      </h1>
+
+
+      <p class="subtitle">
+        জরুরি সতর্কতা পেতে প্রথমে
+        আপনার জেলা নির্বাচন করুন।
+      </p>
+
+
+      <select id="district">
+
+        <option value="">
+          -- আপনার জেলা নির্বাচন করুন --
+        </option>
+
+      </select>
+
+
+      <button
+        id="continueButton"
+        onclick="saveDistrict()"
+      >
+        CONTINUE
+      </button>
+
+
     </div>
 
-    <button class="change" onclick="changeDistrict()">
-      জেলা পরিবর্তন করুন
-    </button>
+
+    <!-- =========================================
+         HOME SCREEN
+         ========================================= -->
+
+    <div
+      id="home"
+      class="home"
+    >
+
+
+      <div class="flag">
+        🇧🇩
+      </div>
+
+
+      <h1>
+        Bangladesh Emergency Alert
+      </h1>
+
+
+      <p class="selected-label">
+        আপনার নির্বাচিত জেলা:
+      </p>
+
+
+      <div
+        class="district"
+        id="selectedDistrict"
+      >
+      </div>
+
+
+      <div
+        id="notificationStatus"
+        class="status"
+      >
+        Notification status checking...
+      </div>
+
+
+      <!-- Future emergency alerts will appear here -->
+
+      <div
+        id="alertArea"
+      >
+      </div>
+
+
+      <button
+        class="change"
+        onclick="changeDistrict()"
+      >
+        জেলা পরিবর্তন করুন
+      </button>
+
+
+      <div class="small">
+        Bangladesh Emergency Alert
+      </div>
+
+
+    </div>
+
 
   </div>
 
-</div>
 
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <!-- =========================================
+       FIREBASE SDK
+       ========================================= -->
 
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
-
-
-<script>
-
-  // Firebase configuration
-  const firebaseConfig = {
-
-    apiKey: "AIzaSyCr95lLjLgbeLHGnaHXV8pO45GwHOU0HIo",
-
-    authDomain:
-      "bangladesh-emergency-ale-b20aa.firebaseapp.com",
-
-    projectId:
-      "bangladesh-emergency-ale-b20aa",
-
-    storageBucket:
-      "bangladesh-emergency-ale-b20aa.firebasestorage.app",
-
-    messagingSenderId:
-      "409539260860",
-
-    appId:
-      "1:409539260860:web:d4043fe16a1061d9953bb9"
-
-  };
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js">
+  </script>
 
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-
-  const messaging = firebase.messaging();
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js">
+  </script>
 
 
-  // বাংলাদেশের ৬৪ জেলা
-  const districts = [
 
-    "ঢাকা",
-    "ফরিদপুর",
-    "গাজীপুর",
-    "গোপালগঞ্জ",
-    "কিশোরগঞ্জ",
-    "মাদারীপুর",
-    "মানিকগঞ্জ",
-    "মুন্সিগঞ্জ",
-    "নারায়ণগঞ্জ",
-    "নরসিংদী",
-    "রাজবাড়ী",
-    "শরীয়তপুর",
-    "টাঙ্গাইল",
+  <script>
 
-    "বাগেরহাট",
-    "চুয়াডাঙ্গা",
-    "যশোর",
-    "ঝিনাইদহ",
-    "খুলনা",
-    "কুষ্টিয়া",
-    "মাগুরা",
-    "মেহেরপুর",
-    "নড়াইল",
-    "সাতক্ষীরা",
+    /*
+     =====================================================
+     FIREBASE CONFIGURATION
+     =====================================================
+    */
 
-    "বান্দরবান",
-    "ব্রাহ্মণবাড়িয়া",
-    "চাঁদপুর",
-    "চট্টগ্রাম",
-    "কুমিল্লা",
-    "কক্সবাজার",
-    "ফেনী",
-    "খাগড়াছড়ি",
-    "লক্ষ্মীপুর",
-    "নোয়াখালী",
-    "রাঙ্গামাটি",
+    const firebaseConfig = {
 
-    "বগুড়া",
-    "জয়পুরহাট",
-    "নওগাঁ",
-    "নাটোর",
-    "চাঁপাইনবাবগঞ্জ",
-    "পাবনা",
-    "রাজশাহী",
-    "সিরাজগঞ্জ",
+      apiKey:
+        "AIzaSyCr95lLjLgbeLHGnaHXV8pO45GwHOU0HIo",
 
-    "দিনাজপুর",
-    "গাইবান্ধা",
-    "কুড়িগ্রাম",
-    "লালমনিরহাট",
-    "নীলফামারী",
-    "পঞ্চগড়",
-    "রংপুর",
-    "ঠাকুরগাঁও",
+      authDomain:
+        "bangladesh-emergency-ale-b20aa.firebaseapp.com",
 
-    "জামালপুর",
-    "ময়মনসিংহ",
-    "নেত্রকোনা",
-    "শেরপুর",
+      projectId:
+        "bangladesh-emergency-ale-b20aa",
 
-    "বরগুনা",
-    "বরিশাল",
-    "ভোলা",
-    "ঝালকাঠি",
-    "পটুয়াখালী",
-    "পিরোজপুর",
+      storageBucket:
+        "bangladesh-emergency-ale-b20aa.firebasestorage.app",
 
-    "হবিগঞ্জ",
-    "মৌলভীবাজার",
-    "সুনামগঞ্জ",
-    "সিলেট"
+      messagingSenderId:
+        "409539260860",
 
-  ];
+      appId:
+        "1:409539260860:web:d4043fe16a1061d9953bb9",
+
+      measurementId:
+        "G-MN3PMPLZXY"
+
+    };
 
 
-  // District dropdown
-  const select = document.getElementById("district");
+    /*
+     =====================================================
+     INITIALIZE FIREBASE
+     =====================================================
+    */
 
-  districts.forEach(function(district) {
-
-    const option = document.createElement("option");
-
-    option.value = district;
-
-    option.textContent = district;
-
-    select.appendChild(option);
-
-  });
-
-
-  // Save district
-  async function saveDistrict() {
-
-    const district = select.value;
-
-    if (!district) {
-
-      alert("অনুগ্রহ করে আপনার জেলা নির্বাচন করুন।");
-
-      return;
-
-    }
-
-    localStorage.setItem(
-      "userDistrict",
-      district
+    firebase.initializeApp(
+      firebaseConfig
     );
 
-    showHome(district);
 
-    // Notification permission
-    await enableNotifications();
-
-  }
+    const messaging =
+      firebase.messaging();
 
 
-  // Show home
-  function showHome(district) {
 
-    document.getElementById("setup").style.display =
-      "none";
+    /*
+     =====================================================
+     VAPID PUBLIC KEY
+     =====================================================
+    */
 
-    document.getElementById("home").style.display =
-      "block";
-
-    document.getElementById("selectedDistrict").textContent =
-      district;
-
-  }
+    const VAPID_KEY =
+      "BNfljoumaCPfQGwiLlIk-ofzt4085KxjQNfftw-j7z4pad7a-ZUt7cS_zBdBL51H0LtEL3NpvBVUU8LcmnabW_c";
 
 
-  // Change district
-  function changeDistrict() {
 
-    localStorage.removeItem("userDistrict");
+    /*
+     =====================================================
+     BANGLADESH 64 DISTRICTS
+     =====================================================
+    */
 
-    document.getElementById("home").style.display =
-      "none";
+    const districts = [
 
-    document.getElementById("setup").style.display =
-      "block";
+      // Dhaka Division - 13
 
-    select.value = "";
+      "ঢাকা",
+      "ফরিদপুর",
+      "গাজীপুর",
+      "গোপালগঞ্জ",
+      "কিশোরগঞ্জ",
+      "মাদারীপুর",
+      "মানিকগঞ্জ",
+      "মুন্সিগঞ্জ",
+      "নারায়ণগঞ্জ",
+      "নরসিংদী",
+      "রাজবাড়ী",
+      "শরীয়তপুর",
+      "টাঙ্গাইল",
 
-  }
+
+      // Khulna Division - 10
+
+      "বাগেরহাট",
+      "চুয়াডাঙ্গা",
+      "যশোর",
+      "ঝিনাইদহ",
+      "খুলনা",
+      "কুষ্টিয়া",
+      "মাগুরা",
+      "মেহেরপুর",
+      "নড়াইল",
+      "সাতক্ষীরা",
 
 
-  // Enable notification
-  async function enableNotifications() {
+      // Chattogram Division - 11
 
-    const status =
-      document.getElementById("notificationStatus");
+      "বান্দরবান",
+      "ব্রাহ্মণবাড়িয়া",
+      "চাঁদপুর",
+      "চট্টগ্রাম",
+      "কুমিল্লা",
+      "কক্সবাজার",
+      "ফেনী",
+      "খাগড়াছড়ি",
+      "লক্ষ্মীপুর",
+      "নোয়াখালী",
+      "রাঙ্গামাটি",
 
 
-    // Browser support check
-    if (!("Notification" in window)) {
+      // Rajshahi Division - 8
 
-      status.textContent =
-        "এই browser notification support করে না।";
+      "বগুড়া",
+      "জয়পুরহাট",
+      "নওগাঁ",
+      "নাটোর",
+      "চাঁপাইনবাবগঞ্জ",
+      "পাবনা",
+      "রাজশাহী",
+      "সিরাজগঞ্জ",
 
-      return;
+
+      // Rangpur Division - 8
+
+      "দিনাজপুর",
+      "গাইবান্ধা",
+      "কুড়িগ্রাম",
+      "লালমনিরহাট",
+      "নীলফামারী",
+      "পঞ্চগড়",
+      "রংপুর",
+      "ঠাকুরগাঁও",
+
+
+      // Mymensingh Division - 4
+
+      "জামালপুর",
+      "ময়মনসিংহ",
+      "নেত্রকোনা",
+      "শেরপুর",
+
+
+      // Barishal Division - 6
+
+      "বরগুনা",
+      "বরিশাল",
+      "ভোলা",
+      "ঝালকাঠি",
+      "পটুয়াখালী",
+      "পিরোজপুর",
+
+
+      // Sylhet Division - 4
+
+      "হবিগঞ্জ",
+      "মৌলভীবাজার",
+      "সুনামগঞ্জ",
+      "সিলেট"
+
+    ];
+
+
+
+    /*
+     =====================================================
+     POPULATE DISTRICT DROPDOWN
+     =====================================================
+    */
+
+    const districtSelect =
+      document.getElementById(
+        "district"
+      );
+
+
+    districts.forEach(
+      function(district) {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+        option.value =
+          district;
+
+        option.textContent =
+          district;
+
+        districtSelect.appendChild(
+          option
+        );
+
+      }
+    );
+
+
+
+    /*
+     =====================================================
+     SHOW HOME
+     =====================================================
+    */
+
+    function showHome(
+      district
+    ) {
+
+      document.getElementById(
+        "setup"
+      ).style.display =
+        "none";
+
+
+      document.getElementById(
+        "home"
+      ).style.display =
+        "block";
+
+
+      document.getElementById(
+        "selectedDistrict"
+      ).textContent =
+        district;
 
     }
 
 
-    try {
 
-      const permission =
-        await Notification.requestPermission();
+    /*
+     =====================================================
+     SAVE DISTRICT
+     =====================================================
+    */
+
+    async function saveDistrict() {
+
+      const district =
+        districtSelect.value;
 
 
-      if (permission !== "granted") {
+      if (!district) {
 
-        status.textContent =
-          "🔕 Notification permission দেওয়া হয়নি।";
+        alert(
+          "অনুগ্রহ করে আপনার জেলা নির্বাচন করুন।"
+        );
 
         return;
 
       }
 
 
-      status.textContent =
-        "🔔 Notification permission দেওয়া হয়েছে। Token তৈরি হচ্ছে...";
+      /*
+       Save district locally
+      */
+
+      localStorage.setItem(
+        "userDistrict",
+        district
+      );
 
 
-      // VAPID public key
-      const token = await messaging.getToken({
-
-        vapidKey:
-          "BNfljoumaCPfQGwiLlIk-ofzt4085KxjQNfftw-j7z4pad7a-ZUt7cS_zBdBL51H0LtEL3NpvBVUU8LcmnabW_c"
-
-      });
+      showHome(
+        district
+      );
 
 
-      if (token) {
+      /*
+       Start notification setup
+      */
+
+      await setupNotifications();
+
+    }
+
+
+
+    /*
+     =====================================================
+     REGISTER FIREBASE SERVICE WORKER
+     =====================================================
+    */
+
+    async function registerFirebaseServiceWorker() {
+
+      if (
+        !("serviceWorker" in navigator)
+      ) {
+
+        throw new Error(
+          "এই browser Service Worker support করে না।"
+        );
+
+      }
+
+
+      const registration =
+        await navigator.serviceWorker.register(
+          "/bangladesh-emergency-alert/firebase-messaging-sw.js"
+        );
+
+
+      console.log(
+        "Firebase Service Worker registered:",
+        registration
+      );
+
+
+      return registration;
+
+    }
+
+
+
+    /*
+     =====================================================
+     SETUP NOTIFICATIONS
+     =====================================================
+    */
+
+    async function setupNotifications() {
+
+      const status =
+        document.getElementById(
+          "notificationStatus"
+        );
+
+
+      status.className =
+        "status";
+
+
+      /*
+       Browser support
+      */
+
+      if (
+        !("Notification" in window)
+      ) {
+
+        status.className =
+          "status error";
+
+        status.textContent =
+          "❌ এই browser notification support করে না।";
+
+        return;
+
+      }
+
+
+      /*
+       HTTPS check
+      */
+
+      if (
+        location.protocol !== "https:" &&
+        location.hostname !== "localhost"
+      ) {
+
+        status.className =
+          "status error";
+
+        status.textContent =
+          "❌ Notification-এর জন্য HTTPS প্রয়োজন।";
+
+        return;
+
+      }
+
+
+      try {
+
+        /*
+         Ask permission
+        */
+
+        let permission =
+          Notification.permission;
+
+
+        if (
+          permission !== "granted"
+        ) {
+
+          permission =
+            await Notification.requestPermission();
+
+        }
+
+
+        if (
+          permission !== "granted"
+        ) {
+
+          status.className =
+            "status warning";
+
+          status.textContent =
+            "🔕 Notification permission দেওয়া হয়নি। Chrome-এর Site Settings থেকে Notifications → Allow করুন।";
+
+          return;
+
+        }
+
+
+        status.className =
+          "status";
+
+
+        status.textContent =
+          "🔔 Notification service চালু হচ্ছে...";
+
+
+        /*
+         Register service worker
+        */
+
+        const registration =
+          await registerFirebaseServiceWorker();
+
+
+        /*
+         Get FCM token
+        */
+
+        const token =
+          await messaging.getToken({
+
+            vapidKey:
+              VAPID_KEY,
+
+            serviceWorkerRegistration:
+              registration
+
+          });
+
+
+        if (!token) {
+
+          throw new Error(
+            "FCM registration token পাওয়া যায়নি।"
+          );
+
+        }
+
+
+        /*
+         Save token temporarily
+        */
+
+        localStorage.setItem(
+          "fcmToken",
+          token
+        );
+
+
+        /*
+         Save token timestamp
+        */
+
+        localStorage.setItem(
+          "fcmTokenSavedAt",
+          new Date().toISOString()
+        );
+
+
+        /*
+         Save selected district
+        */
+
+        localStorage.setItem(
+          "notificationDistrict",
+          localStorage.getItem(
+            "userDistrict"
+          )
+        );
+
 
         console.log(
           "FCM TOKEN:",
           token
         );
 
-        // Temporary local save
-        localStorage.setItem(
-          "fcmToken",
-          token
+
+        console.log(
+          "DISTRICT:",
+          localStorage.getItem(
+            "userDistrict"
+          )
         );
 
-        status.textContent =
-          "🔔 Notification প্রস্তুত আছে।";
 
-      } else {
+        status.className =
+          "status success";
 
-        status.textContent =
-          "FCM token পাওয়া যায়নি।";
+
+        status.innerHTML =
+          "🔔 <strong>Notification প্রস্তুত আছে।</strong><br>" +
+          "আপনার জেলার জরুরি সতর্কতা পাওয়ার জন্য এই device প্রস্তুত।";
+
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "FCM ERROR:",
+          error
+        );
+
+
+        status.className =
+          "status error";
+
+
+        status.innerHTML =
+          "❌ Notification setup করতে সমস্যা হয়েছে।<br>" +
+          "<small>" +
+          escapeHtml(
+            error.message ||
+            "Unknown error"
+          ) +
+          "</small>";
 
       }
 
     }
 
-    catch (error) {
 
-      console.error(
-        "Notification error:",
-        error
+
+    /*
+     =====================================================
+     FOREGROUND MESSAGE
+     =====================================================
+    */
+
+    messaging.onMessage(
+      function(payload) {
+
+        console.log(
+          "Foreground message received:",
+          payload
+        );
+
+
+        const title =
+          payload.notification?.title ||
+          "🚨 Bangladesh Emergency Alert";
+
+
+        const body =
+          payload.notification?.body ||
+          "আপনার জেলার জন্য নতুন জরুরি সতর্কতা এসেছে।";
+
+
+        showAlertOnPage(
+          title,
+          body
+        );
+
+
+        /*
+         Browser notification
+         */
+
+        if (
+          Notification.permission ===
+          "granted"
+        ) {
+
+          try {
+
+            new Notification(
+              title,
+              {
+                body: body
+              }
+            );
+
+          }
+
+          catch (error) {
+
+            console.log(
+              "Browser notification error:",
+              error
+            );
+
+          }
+
+        }
+
+      }
+    );
+
+
+
+    /*
+     =====================================================
+     SHOW ALERT INSIDE APP
+     =====================================================
+    */
+
+    function showAlertOnPage(
+      title,
+      message
+    ) {
+
+      const area =
+        document.getElementById(
+          "alertArea"
+        );
+
+
+      area.innerHTML = "";
+
+
+      const box =
+        document.createElement(
+          "div"
+        );
+
+
+      box.className =
+        "alert-box";
+
+
+      const titleElement =
+        document.createElement(
+          "div"
+        );
+
+
+      titleElement.className =
+        "alert-title";
+
+
+      titleElement.textContent =
+        title;
+
+
+      const messageElement =
+        document.createElement(
+          "div"
+        );
+
+
+      messageElement.className =
+        "alert-text";
+
+
+      messageElement.textContent =
+        message;
+
+
+      box.appendChild(
+        titleElement
       );
 
-      status.textContent =
-        "Notification setup করতে সমস্যা হয়েছে।";
+
+      box.appendChild(
+        messageElement
+      );
+
+
+      area.appendChild(
+        box
+      );
 
     }
 
-  }
 
 
-  // Page load
-  window.onload = function() {
+    /*
+     =====================================================
+     CHANGE DISTRICT
+     =====================================================
+    */
 
-    const savedDistrict =
-      localStorage.getItem("userDistrict");
+    async function changeDistrict() {
+
+      localStorage.removeItem(
+        "userDistrict"
+      );
 
 
-    if (savedDistrict) {
+      localStorage.removeItem(
+        "notificationDistrict"
+      );
 
-      showHome(savedDistrict);
+
+      /*
+       We intentionally keep FCM token.
+       It can later be updated to the
+       new district in the backend.
+      */
+
+
+      document.getElementById(
+        "home"
+      ).style.display =
+        "none";
+
+
+      document.getElementById(
+        "setup"
+      ).style.display =
+        "block";
+
+
+      districtSelect.value =
+        "";
 
     }
 
-  };
 
-</script>
+
+    /*
+     =====================================================
+     ESCAPE HTML
+     =====================================================
+    */
+
+    function escapeHtml(
+      text
+    ) {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.textContent =
+        text;
+
+
+      return div.innerHTML;
+
+    }
+
+
+
+    /*
+     =====================================================
+     PAGE LOAD
+     =====================================================
+    */
+
+    window.addEventListener(
+      "load",
+      async function() {
+
+        const savedDistrict =
+          localStorage.getItem(
+            "userDistrict"
+          );
+
+
+        if (savedDistrict) {
+
+          showHome(
+            savedDistrict
+          );
+
+
+          /*
+           If permission is already granted,
+           automatically try to prepare FCM.
+          */
+
+          if (
+            "Notification" in window &&
+            Notification.permission ===
+            "granted"
+          ) {
+
+            await setupNotifications();
+
+          }
+
+        }
+
+      }
+    );
+
+  </script>
 
 </body>
+
 </html>
